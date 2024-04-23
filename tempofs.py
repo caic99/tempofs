@@ -49,7 +49,7 @@ class webfile:
                 logging.warning("Unknown Accept-Ranges value: %s", nonseekable)
             nonseekable = True
         if nonseekable:
-            logging.warning(f"File {self.name} is nonseekable")
+            logging.error(f"File {self.name} is nonseekable")
         return pyfuse3.FileInfo(fh=self.inode, keep_cache=True, nonseekable=nonseekable)
 
     async def open(self):
@@ -132,7 +132,7 @@ class tempofs(pyfuse3.Operations):
             or flags & os.O_RDWR
             or flags & os.O_WRONLY
         ):
-            logging.warning("Only read is supported: %s", flags)
+            logging.error("Contents are read-only, but opened with mode %s", flags)
             raise pyfuse3.FUSEError(errno.EACCES)
         try:
             return await self.find(inode).getfileinfo()
