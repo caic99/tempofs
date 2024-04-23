@@ -14,6 +14,7 @@ sudo apt install python3-pyfuse3
 ## Usage
 
 In a YAML file, set the files and its url in the format of "filename: url" in each line. Subfolder is not supported, and all files are placed in the mounted directory.
+Use an empty string as the filename to infer from URL.
 
 ```bash
 mkdir mnt

@@ -9,6 +9,7 @@ import os
 import stat
 from argparse import ArgumentParser
 from email.utils import parsedate_to_datetime
+from urllib.parse import urlparse
 
 import pyfuse3
 import requests
@@ -19,7 +20,7 @@ import yaml
 class webfile:
     def __init__(self, inode, name, url) -> None:
         self.inode = inode
-        self.name = name # TODO: get name by Content-Disposition
+        self.name = name if name else os.path.basename(urlparse(url).path)
         self.url = url
         self.session = requests.Session()
         self.headers = self.session.head(self.url).headers
