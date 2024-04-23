@@ -22,27 +22,26 @@ class webfile:
         self.name = name # TODO: get name by Content-Disposition
         self.url = url
         self.session = requests.Session()
+        self.headers = self.session.head(self.url).headers
 
     async def getattr(self) -> pyfuse3.EntryAttributes:
         entry = pyfuse3.EntryAttributes()
         entry.st_ino = self.inode
-        r = self.session.head(self.url)
         entry.st_mode = stat.S_IFREG | 0o444
         try:
             last_modified = (
-                parsedate_to_datetime(r.headers["Last-Modified"]).timestamp() * 1e9
+                parsedate_to_datetime(self.headers["Last-Modified"]).timestamp() * 1e9
             )
         except KeyError:
             last_modified = 0
         entry.st_ctime_ns = last_modified
         entry.st_atime_ns = last_modified
         entry.st_mtime_ns = last_modified
-        entry.st_size = int(r.headers.get("Content-Length", 0))
+        entry.st_size = int(self.headers.get("Content-Length", 0))
         return entry
 
     async def getfileinfo(self) -> pyfuse3.FileInfo:
-        r = self.session.head(self.url)
-        nonseekable = r.headers.get("Accept-Ranges", True)
+        nonseekable = self.headers.get("Accept-Ranges", True)
         if nonseekable == "bytes":
             nonseekable = False
         else:
@@ -165,11 +164,11 @@ def init_logging(debug=False):
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
-        "config", type=str, help="the map file of the file system",
+        "config", type=str, help="file name and its address in yaml format",
     )
-    parser.add_argument("mountpoint", type=str, help="Where to mount the file system")
+    parser.add_argument("mountpoint", type=str, help="the directory to mount the files")
     parser.add_argument(
-        "--debug", action="store_true", default=False, help="Enable debugging output"
+        "--debug", action="store_true", default=False, help="enable debugging output"
     )
 
     return parser.parse_args()
