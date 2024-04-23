@@ -7,6 +7,7 @@ import errno
 import logging
 import os
 import stat
+import pathlib
 from argparse import ArgumentParser
 from email.utils import parsedate_to_datetime
 from urllib.parse import urlparse
@@ -165,9 +166,9 @@ def init_logging(debug=False):
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
-        "config", type=str, help="file name and its address in yaml format",
+        "config", type=pathlib.Path, help="file name and its address in yaml format",
     )
-    parser.add_argument("mountpoint", type=str, help="the directory to mount the files")
+    parser.add_argument("mountpoint", type=pathlib.Path, help="the directory to mount the files")
     parser.add_argument(
         "--debug", action="store_true", default=False, help="enable debugging output"
     )
@@ -178,14 +179,14 @@ def parse_args():
 def main():
     options = parse_args()
     init_logging(options.debug)
-
+    options.mountpoint.mkdir(parents=True, exist_ok=True)
     testfs = tempofs(options.config)
     fuse_options = set(pyfuse3.default_options)
     fuse_options.add("fsname=tempofs")
 
     if options.debug:
         fuse_options.add("debug")
-    pyfuse3.init(testfs, options.mountpoint, fuse_options)
+    pyfuse3.init(testfs, str(options.mountpoint), fuse_options)
     try:
         trio.run(pyfuse3.main)
     finally:
