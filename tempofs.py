@@ -19,7 +19,7 @@ import yaml
 class webfile:
     def __init__(self, inode, name, url) -> None:
         self.inode = inode
-        self.name = name
+        self.name = name # TODO: get name by Content-Disposition
         self.url = url
         self.session = requests.Session()
 
@@ -164,11 +164,10 @@ def init_logging(debug=False):
 
 def parse_args():
     parser = ArgumentParser()
-
-    parser.add_argument("mountpoint", type=str, help="Where to mount the file system")
     parser.add_argument(
-        "config", type=str, help="the map file of the file system", default="test.yaml"
+        "config", type=str, help="the map file of the file system",
     )
+    parser.add_argument("mountpoint", type=str, help="Where to mount the file system")
     parser.add_argument(
         "--debug", action="store_true", default=False, help="Enable debugging output"
     )

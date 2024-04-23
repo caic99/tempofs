@@ -17,7 +17,7 @@ In a YAML file, set the files and its url in the format of "filename: url" in ea
 
 ```bash
 mkdir mnt
-python3 tempofs.py mnt example.yaml & # add `--debug` for debug info output
+python3 tempofs.py example.yaml mnt & # add `--debug` for debug info output
 ls -lh mnt
 # known issue: should `ls` the mounted root dir first to access its contents,
 # since `LOOKUP` including subdirs has not be implemented yet.
