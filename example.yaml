@@ -4,3 +4,4 @@ mbp.jpg: https://www.apple.com.cn/v/home/az/images/promos/macbook-pro-14-and-16/
 sample.zip: https://mirrors.tuna.tsinghua.edu.cn/blender/blender-release/Blender3.5/blender-3.5.1-windows-x64.zip
 oc.tar: https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_2M.tar
 oc_all.tar: https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_all.tar
+mcp: https://modelcontextprotocol.io/introduction.md
